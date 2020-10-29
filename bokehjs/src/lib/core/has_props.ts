@@ -336,22 +336,22 @@ export abstract class HasProps extends Signalable() implements Equals, Printable
   // Set a hash of model attributes on the object, firing `"change"`. This is
   // the core primitive operation of a model, updating the data and notifying
   // anyone who needs to know about the change in state. The heart of the beast.
-  private _setv(changes: Map<Property, unknown>, options: HasProps.SetOptions): void {
+  private _setv(changes: Map<Property, unknown>, options: HasProps.SetOptions): Set<Property> {
     // Extract attributes and options.
     const check_eq   = options.check_eq
-    const changed    = []
+    const changed    = new Set<Property>()
     const changing   = this._changing
     this._changing = true
 
     for (const [prop, value] of changes) {
       if (check_eq === false || !is_equal(prop.get_value(), value)) {
         prop.set_value(value)
-        changed.push(prop)
+        changed.add(prop)
       }
     }
 
     // Trigger all relevant attribute changes.
-    if (changed.length > 0)
+    if (changed.size > 0)
       this._pending = true
     for (const prop of changed) {
       prop.change.emit()
@@ -359,17 +359,19 @@ export abstract class HasProps extends Signalable() implements Equals, Printable
 
     // You might be wondering why there's a `while` loop here. Changes can
     // be recursively nested within `"change"` events.
-    if (changing)
-      return
-    if (!options.no_change) {
-      while (this._pending) {
-        this._pending = false
-        this.change.emit()
+    if (!changing) {
+      if (!options.no_change) {
+        while (this._pending) {
+          this._pending = false
+          this.change.emit()
+        }
       }
+
+      this._pending = false
+      this._changing = false
     }
 
-    this._pending = false
-    this._changing = false
+    return changed
   }
 
   setv(changed_attrs: Attrs, options: HasProps.SetOptions = {}): void {
@@ -394,13 +396,14 @@ export abstract class HasProps extends Signalable() implements Equals, Printable
       previous.set(prop, prop.get_value())
     }
 
-    this._setv(changed, options)
+    const updated = this._setv(changed, options)
 
     const {document} = this
     if (document != null) {
       const changed: [Property, unknown, unknown][] = []
       for (const [prop, value] of previous) {
-        changed.push([prop, value, prop.get_value()])
+        if (updated.has(prop))
+          changed.push([prop, value, prop.get_value()])
       }
 
       for (const [, old_value, new_value] of changed) {
