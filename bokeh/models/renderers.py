@@ -47,6 +47,7 @@ from ..core.validation.errors import (
 )
 from ..model import Model
 from .glyphs import Circle, ConnectedXYGlyph, Glyph, MultiLine
+from .graphics import Decoration
 from .graphs import GraphHitTestPolicy, LayoutProvider, NodesOnly
 from .sources import CDSView, ColumnDataSource, DataSource, WebDataSource
 from .tiles import TileSource, WMTSTileSource
@@ -220,6 +221,14 @@ class GlyphRenderer(DataRenderer):
 
     muted = Bool(False, help="""
     """)
+
+    def add_decoration(self, marking, node):
+        glyphs = [self.glyph, self.selection_glyph, self.nonselection_glyph, self.hover_glyph, self.muted_glyph]
+        decoration = Decoration(marking=marking, node=node)
+
+        for glyph in glyphs:
+            if isinstance(glyph, Glyph):
+                glyph.decorations.append(decoration)
 
 _DEFAULT_NODE_RENDERER = lambda: GlyphRenderer(
     glyph=Circle(), data_source=ColumnDataSource(data=dict(index=[]))

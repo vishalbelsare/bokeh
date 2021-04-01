@@ -7,6 +7,7 @@ import {Context2d} from "core/util/canvas"
 import {View} from "core/view"
 import {Model} from "../../model"
 import {Anchor} from "core/enums"
+import {build_views} from "core/build_views"
 import {logger} from "core/logging"
 import {Arrayable, Rect, FloatArray, ScreenArray, Indices} from "core/types"
 import {isString} from "core/util/types"
@@ -19,6 +20,7 @@ import {FactorRange, Factor} from "../ranges/factor_range"
 import {Selection} from "../selections/selection"
 import {GlyphRendererView} from "../renderers/glyph_renderer"
 import {ColumnarDataSource} from "../sources/columnar_data_source"
+import {Decoration, DecorationView} from "../graphics/decoration"
 
 import type {BaseGLGlyph} from "./webgl/base"
 
@@ -70,6 +72,13 @@ export abstract class GlyphView extends View {
   initialize(): void {
     super.initialize()
     this.visuals = new visuals.Visuals(this)
+  }
+
+  decorations: Map<Decoration, DecorationView> = new Map()
+
+  async lazy_initialize(): Promise<void> {
+    await super.lazy_initialize()
+    await build_views(this.decorations, this.model.decorations, {parent: this.parent})
   }
 
   request_render(): void {
@@ -313,6 +322,10 @@ export abstract class GlyphView extends View {
 
     this._set_data(indices_to_update ?? null)  // TODO doesn't take subset indices into account
 
+    for (const decoration of this.decorations.values()) {
+      decoration.marking.set_data(source, indices)
+    }
+
     this.glglyph?.set_data_changed()
 
     this.index_data()
@@ -372,7 +385,9 @@ export abstract class GlyphView extends View {
 export namespace Glyph {
   export type Attrs = p.AttrsOf<Props>
 
-  export type Props = Model.Props
+  export type Props = Model.Props & {
+    decorations: p.Property<Decoration[]>
+  }
 
   export type Visuals = visuals.Visuals
 }
@@ -385,5 +400,11 @@ export abstract class Glyph extends Model {
 
   constructor(attrs?: Partial<Glyph.Attrs>) {
     super(attrs)
+  }
+
+  static init_Glyph(): void {
+    this.define<Glyph.Props>(({Array, Ref}) => ({
+      decorations: [ Array(Ref(Decoration)), [] ],
+    }))
   }
 }
