@@ -190,7 +190,7 @@ def push_notebook(*, document=None, state=None, handle=None):
     ''' Update Bokeh plots in a Jupyter notebook output cells with new data
     or property values.
 
-    When working the the notebook, the ``show`` function can be passed the
+    When working the the notebook, the |show| function can be passed the
     argument ``notebook_handle=True``, which will cause it to return a
     handle object that can be used to update the Bokeh output later. When
     ``push_notebook`` is called, any property updates (e.g. plot titles or
@@ -209,7 +209,7 @@ def push_notebook(*, document=None, state=None, handle=None):
 
         state (State, optional) :
             A :class:`State` object. If None, then the current default
-            state (set by ``output_file``, etc.) is used. (default: None)
+            state (set by |output_file| etc.) is used. (default: None)
 
     Returns:
         None

@@ -193,10 +193,10 @@ Notebook slides
 You can use a notebook with `Reveal.js`_ to generate slideshows from cells.
 You can also include standalone (i.e. non-server) Bokeh plots in such sideshows.
 However, you will need to take a few extra steps to display the output correctly.
-Particularly, make sure that **the cell containing the** ``output_notebook``
+Particularly, make sure that **the cell containing** |output_notebook|
 **is not be skipped**.
 
-Rendered cell output of the ``output_notebook`` call ensures that the
+Rendered cell output of the |output_notebook| call ensures that the
 BokehJS library loads. Otherwise, Bokeh plots will not work. If this cell's
 type is set to *"skip"*, BokehJS will not load, and Bokeh plots will not display.
 If you want to hide this cell, assign it the *"notes"* slide type.
@@ -271,9 +271,6 @@ notebook below:
 
 
 .. |bokeh.io| replace:: :ref:`bokeh.io <bokeh.io>`
-
-.. |output_notebook| replace:: :func:`~bokeh.io.output_notebook`
-.. |output_file| replace:: :func:`~bokeh.io.output_file`
 .. |push_notebook| replace:: :func:`~bokeh.io.push_notebook`
 
 .. _interactors: http://ipywidgets.readthedocs.io/en/latest/examples/Using%20Interact.html
