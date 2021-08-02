@@ -22,7 +22,7 @@ type Position = {
 }
 
 /**
- * Helper class to rendering MathText into Canvas
+ * Helper class for rendering MathText into Canvas
  */
 export class MathTextView extends View implements GraphicsBox {
   override model: MathText
@@ -32,7 +32,7 @@ export class MathTextView extends View implements GraphicsBox {
   _position: Position = {sx: 0, sy: 0}
   has_image_loaded = false
   // Align does nothing, needed to maintain compatibility with TextBox,
-  // to align you need to use TeX Macros.
+  // to align you need to use TeX Macros
   // http://docs.mathjax.org/en/latest/input/tex/macros/index.html?highlight=align
   align: "left" | "center" | "right" | "justify" = "left"
   // Same for infer_text_height
@@ -278,7 +278,7 @@ export class MathTextView extends View implements GraphicsBox {
   }
 
   /**
-   * Render text into a SVG with MathJax and load it into memory.
+   * Render text into a SVG with MathJax and load it into memory
    */
   private load_image(): Promise<HTMLImageElement> {
     const mathjax_element = MathJax.tex2svg(this.model.text)
@@ -308,7 +308,7 @@ export class MathTextView extends View implements GraphicsBox {
 
   /**
    * Takes a Canvas' Context2d and if the image has already
-   * been loaded draws the image in it otherwise draws the model's text.
+   * been loaded draws the image in it otherwise draws the model's text
   */
   paint(ctx: Context2d): void {
     ctx.save()
