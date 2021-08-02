@@ -438,12 +438,12 @@ class Document:
         events_json = patch['events']
         references = instantiate_references_json(references_json, self._all_models)
 
-        # The model being changed isn't always in references so add it in
-        for event_json in events_json:
-            if 'model' in event_json:
-                model_id = event_json['model']['id']
-                if model_id in self._all_models:
-                    references[model_id] = self._all_models[model_id]
+        # `references` contain only directly relevant models to not degrade performance (otherwise
+        # we would need to serialize and transfer entire model hierarchies), so use `_all_models`
+        # to fill in the rest.
+        for model in self._all_models.values():
+            if model.id not in references:
+                references[model.id] = model
 
         initialize_references_json(references_json, references, setter)
 
