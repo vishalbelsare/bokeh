@@ -1130,7 +1130,7 @@ LaTeX and axis labels
         :source-position: above
 
 LaTeX and tick labels
-    To add LaTeX notations to your axes' tick labels, use the
+    To add LaTeX notations to your tick labels, use the
     :func:`~bokeh.models.axes.Axis.major_label_overrides` function with your
     axis or axes.
 
