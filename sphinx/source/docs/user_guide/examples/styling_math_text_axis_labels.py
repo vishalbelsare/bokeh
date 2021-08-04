@@ -6,7 +6,7 @@ from bokeh.plotting import figure, show
 x = arange(-2*pi, 2*pi, 0.1)
 y = sin(x)
 
-plot = figure(min_border=80)
+plot = figure(min_border=80, height=400)
 plot.circle(x, y, fill_color="red", size=5)
 
 plot.xaxis.axis_label = MathText(text=r"x\cdot\pi")

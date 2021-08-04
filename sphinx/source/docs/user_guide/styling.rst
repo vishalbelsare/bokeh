@@ -1113,14 +1113,36 @@ Adding mathematical notations with LaTeX
 
 Bokeh supports mathematical notations expressed in the LaTeX_ markup language
 with a growing number of plot elements. Currently, you can use LaTeX notations
-only with :ref:`axis labels <userguide_styling_axes_labels>`. Supporting LaTeX
-notations in more elements is planned for future releases.
+only with :ref:`axis labels <userguide_styling_axes_labels>` and with tick
+labels using :func:`~bokeh.models.axes.Axis.major_label_overrides`. Support for
+LaTeX notations in more elements is planned for future releases.
 
 Bokeh uses the MathJax_ library to handle LaTeX markup. To use LaTeX markup
 instead of plain text, use a :class:`~bokeh.models.math_text.MathText` object:
 
-.. bokeh-plot:: docs/user_guide/examples/styling_axis_labels_math_text.py
-    :source-position: above
+LaTeX and axis labels
+    To use LaTeX notation as an axis label, pass a
+    :class:`~bokeh.models.math_text.MathText` object to the
+    :class:`~bokeh.models.axes.Axis.axis_label` property of your axis or axes.
+    For example:
+
+    .. bokeh-plot:: docs/user_guide/examples/styling_math_text_axis_labels.py
+        :source-position: above
+
+LaTeX and tick labels
+    To add LaTeX notations to your axes' tick labels, use the
+    :func:`~bokeh.models.axes.Axis.major_label_overrides` function with your
+    axis or axes.
+
+    This function is used to replace values for existing tick labels with custom
+    text. It accepts a dictionary with the tick label's original value as the
+    key and your custom value as the dict's value.
+
+    Use this function to replace any standard text tick labels with LaTeX
+    notation:
+
+    .. bokeh-plot:: docs/user_guide/examples/styling_math_text_tick_labels.py
+        :source-position: above
 
 .. note::
     The ``text`` attribute of ``MathText`` only accepts LaTeX notations. You do
